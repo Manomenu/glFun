@@ -68,47 +68,48 @@ void WindowApp::processInput()
 WindowApp::WindowApp() :
     vertices
     {
-    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-     0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+    // positions          // normals           // texture coords
+    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
 
-    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 0.0f,
 
-    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-    -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-    -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
 
-     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-     0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
 
-    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
 
-    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-     0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
+    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
     },
     lightVertices
     {
@@ -191,7 +192,7 @@ void WindowApp::texturesConfig()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     stbi_set_flip_vertically_on_load(true);
-    td.data = stbi_load("./images/crafting-table.png", &td.width, &td.height, &td.nrChannels, 0);
+    td.data = stbi_load("./images/container2.png", &td.width, &td.height, &td.nrChannels, 0);
     if (td.data)
     {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, td.width, td.height, 0, GL_RGB,
@@ -213,11 +214,13 @@ void WindowApp::buffersConfig()
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
     // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     // normal vector attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
@@ -251,9 +254,14 @@ void WindowApp::cameraConfig()
 void WindowApp::runLoop()
 {
     shader->use();
-    //shader->setInt("texture1", 0);
-    shader->setVec3("objectColor", 1.0f, 0.5f, 0.31f);
-    shader->setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+    // gold
+    shader->setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+    shader->setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+    shader->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+    shader->setFloat("material.shininess", 32.0f);
+    shader->setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
+    shader->setVec3("light.diffuse", 0.5f, 0.5f, 0.5f); // darken diffuse light a bit
+    shader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
     shader->setVec3("lightPos", LIGHTPOS);
 
     glEnable(GL_DEPTH_TEST);
