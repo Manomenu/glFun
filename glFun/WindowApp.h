@@ -41,13 +41,6 @@ struct CameraData
 	}
 };
 
-struct TextureData
-{
-	int width, height, nrChannels;
-	unsigned char* data;
-	unsigned int texture;
-};
-
 class WindowApp
 {
 public:
@@ -59,7 +52,8 @@ private:
 	float lastFrame;
 	std::vector<float> vertices, lightVertices;
 	GLuint VAO, VBO, lightVAO, lightVBO;
-	TextureData texData;
+	unsigned int texture;
+	unsigned int specularMap;
 	WindowData* winData;
 	Shader* shader;
 	Shader* lightShader;
@@ -70,11 +64,12 @@ private:
 	void processInput();
 	void cameraConfig();
 	void texturesConfig();
+	unsigned int loadTexture(char const*);
 
 	static CameraData* camData;
 
-	static void mouseCallback(GLFWwindow* window, double xpos, double ypos);
-	static void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
-	static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
+	static void mouseCallback(GLFWwindow*, double, double);
+	static void scrollCallback(GLFWwindow*, double, double);
+	static void framebufferSizeCallback(GLFWwindow*, int, int);
 };
 #endif // !WINDOWAPP_H

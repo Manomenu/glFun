@@ -5,14 +5,14 @@
 
 #define ERR(source) (perror(source), fprintf(stdout, "%s:%d\n", __FILE__, __LINE__), glfwTerminate(), exit(EXIT_FAILURE))
 
-const int WIDTH = 800;
-const int HEIGHT = 600;
+const int WIDTH = 1600;
+const int HEIGHT = 1200;
 const int VERSION_MAJOR = 3;
 const int VERSION_MINOR = 3;
 const float FRONT = 0.1f;
 const float BACK = 100.0f;
 const glm::vec4 BACKGROUNDCOLOR = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-const glm::vec3 LIGHTPOS = glm::vec3(1.2f, 1.0f, 2.0f);
+const glm::vec3 LIGHTPOS = glm::vec3(1.2f, 1.5f, 2.0f);
 const std::string TITLE = "Sztanga Window";
 
 CameraData* WindowApp::camData = new CameraData(WIDTH, HEIGHT);
@@ -183,26 +183,8 @@ WindowApp::WindowApp() :
 
 void WindowApp::texturesConfig()
 {
-    TextureData& td = texData;
-    glGenTextures(1, &td.texture);
-    glBindTexture(GL_TEXTURE_2D, td.texture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    stbi_set_flip_vertically_on_load(true);
-    td.data = stbi_load("./images/container2.png", &td.width, &td.height, &td.nrChannels, 0);
-    if (td.data)
-    {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, td.width, td.height, 0, GL_RGB,
-            GL_UNSIGNED_BYTE, td.data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else
-        ERR("Failed to load texture");
-    stbi_image_free(td.data);
-    stbi_set_flip_vertically_on_load(false);
+    texture = loadTexture(std::string("./images/container2.png").c_str());
+    specularMap = loadTexture(std::string("./images/container2_specular.png").c_str());
 }
 
 void WindowApp::buffersConfig()
@@ -254,16 +236,14 @@ void WindowApp::cameraConfig()
 void WindowApp::runLoop()
 {
     shader->use();
-    // gold
-    shader->setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
-    shader->setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
-    shader->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+    shader->setInt("material.diffuse", 0);
+    shader->setInt("material.specular", 1);
     shader->setFloat("material.shininess", 32.0f);
-    shader->setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
-    shader->setVec3("light.diffuse", 0.5f, 0.5f, 0.5f); // darken diffuse light a bit
+    shader->setVec3("light.ambient", 0.1f, 0.1f, 0.1f);
+    shader->setVec3("light.diffuse", 0.6f, 0.6f, 0.6f); // darken diffuse light a bit
     shader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-    shader->setVec3("lightPos", LIGHTPOS);
-
+    shader->setVec3("light.position", LIGHTPOS);
+    
     glEnable(GL_DEPTH_TEST);
 
     while (!glfwWindowShouldClose(winData->window))
@@ -283,7 +263,7 @@ void WindowApp::runLoop()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shader->use();
-
+        
         shader->setVec3("viewPos", camData->camera->Position);
         shader->setMat4("view", camData->camera->GetViewMatrix());
         glm::mat4 projection = glm::perspective(glm::radians(camData->camera->Zoom), 
@@ -296,7 +276,7 @@ void WindowApp::runLoop()
         model = glm::rotate(model, (float)glfwGetTime() * glm::radians(20.1f), glm::vec3(0.5f, 1.0f, 0.0f));
         shader->setMat4("model", model);
 
-        glDrawArrays(GL_TRIANGLES, 0, vertices.size() / 6);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
 
         model = glm::translate(model, glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -305,7 +285,11 @@ void WindowApp::runLoop()
         model = glm::translate(model, glm::vec3(-0.5f, -0.5f, 0.0f));
         shader->setMat4("model", model);
 
-        glDrawArrays(GL_TRIANGLES, 0, vertices.size() / 6);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, specularMap);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
 
 
@@ -321,7 +305,7 @@ void WindowApp::runLoop()
         lightShader->setMat4("model", model);
 
         glBindVertexArray(lightVAO);
-        glDrawArrays(GL_TRIANGLES, 0, lightVertices.size() / 3);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -339,4 +323,41 @@ WindowApp::~WindowApp()
 {
     delete winData;
     delete camData;
+}
+
+unsigned int WindowApp::loadTexture(char const* path)
+{
+    unsigned int textureID;
+    glGenTextures(1, &textureID);
+
+    int width, height, nrComponents;
+    unsigned char* data = stbi_load(path, &width, &height, &nrComponents, 0);
+    if (data)
+    {
+        GLenum format;
+        if (nrComponents == 1)
+            format = GL_RED;
+        else if (nrComponents == 3)
+            format = GL_RGB;
+        else if (nrComponents == 4)
+            format = GL_RGBA;
+
+        glBindTexture(GL_TEXTURE_2D, textureID);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        stbi_image_free(data);
+    }
+    else
+    {
+        std::cout << "Texture failed to load at path: " << path << std::endl;
+        stbi_image_free(data);
+    }
+
+    return textureID;
 }
