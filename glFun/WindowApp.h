@@ -62,6 +62,7 @@ private:
 	TextureData texData;
 	WindowData* winData;
 	Shader* shader;
+	Shader* lightShader;
 
 	~WindowApp();
 	void buffersConfig();

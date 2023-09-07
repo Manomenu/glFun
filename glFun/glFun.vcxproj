@@ -144,6 +144,7 @@
     <ClInclude Include="WindowApp.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shaders\lightShader.fs" />
     <None Include="shaders\shader.fs" />
     <None Include="shaders\shader.vs" />
   </ItemGroup>

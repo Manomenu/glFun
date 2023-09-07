@@ -11,7 +11,8 @@ const int VERSION_MAJOR = 3;
 const int VERSION_MINOR = 3;
 const float FRONT = 0.1f;
 const float BACK = 100.0f;
-const glm::vec4 BACKGROUNDCOLOR = glm::vec4(0.2f, 0.3f, 0.3f, 1.0f);
+const glm::vec4 BACKGROUNDCOLOR = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+const glm::vec3 LIGHTPOS = glm::vec3(1.2f, 1.0f, 2.0f);
 const std::string TITLE = "Sztanga Window";
 
 CameraData* WindowApp::camData = new CameraData(WIDTH, HEIGHT);
@@ -67,47 +68,47 @@ void WindowApp::processInput()
 WindowApp::WindowApp() :
     vertices
     {
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
 
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
 
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
 
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
 
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
 
-        //-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        // 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        // 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        // 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        //-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-        //-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
     },
     lightVertices
     {
@@ -212,10 +213,10 @@ void WindowApp::buffersConfig()
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
     // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    // texture attribute
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    // normal vector attribute
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
@@ -237,6 +238,7 @@ void WindowApp::buffersConfig()
 void WindowApp::shadersConfig()
 {
     shader = new Shader("./shaders/shader.vs", "./shaders/shader.fs");
+    lightShader = new Shader("./shaders/shader.vs", "./shaders/lightShader.fs");
 }
 
 void WindowApp::cameraConfig()
@@ -252,6 +254,7 @@ void WindowApp::runLoop()
     //shader->setInt("texture1", 0);
     shader->setVec3("objectColor", 1.0f, 0.5f, 0.31f);
     shader->setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+    shader->setVec3("lightPos", LIGHTPOS);
 
     glEnable(GL_DEPTH_TEST);
 
@@ -273,37 +276,44 @@ void WindowApp::runLoop()
 
         shader->use();
 
-        /*glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texData.texture);*/
-
+        shader->setVec3("viewPos", camData->camera->Position);
         shader->setMat4("view", camData->camera->GetViewMatrix());
-
         glm::mat4 projection = glm::perspective(glm::radians(camData->camera->Zoom), 
             winData->width / (float)winData->height, FRONT, BACK);
         shader->setMat4("projection", projection);
 
         glBindVertexArray(VAO);
+
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::rotate(model, (float)glfwGetTime() * glm::radians(20.1f), glm::vec3(0.5f, 1.0f, 0.0f));
         shader->setMat4("model", model);
 
-        glDrawArrays(GL_TRIANGLES, 0, vertices.size() / 5); // for drawing without EBO
+        glDrawArrays(GL_TRIANGLES, 0, vertices.size() / 6);
 
         model = glm::translate(model, glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-
         model = glm::translate(model, glm::vec3(0.5f, 0.5f, 0.0f));
-
-        //// Apply rotation (e.g., 45-degree rotation around the X-axis)
         model = glm::rotate(model, (glm::sin((float)glfwGetTime()) + 1.0f) / 2.0f * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-
-        //// Translate back to original position
         model = glm::translate(model, glm::vec3(-0.5f, -0.5f, 0.0f));
-
         shader->setMat4("model", model);
-        glDrawArrays(GL_TRIANGLES, 0, vertices.size() / 5); // for drawing without EBO
 
-        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawArrays(GL_TRIANGLES, 0, vertices.size() / 6);
+        glBindVertexArray(0);
+
+
+        lightShader->use();
+
+        lightShader->setMat4("view", camData->camera->GetViewMatrix());
+        projection = glm::perspective(glm::radians(camData->camera->Zoom),
+            winData->width / (float)winData->height, FRONT, BACK);
+        lightShader->setMat4("projection", projection);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, LIGHTPOS);
+        model = glm::scale(model, glm::vec3(0.2f));
+        lightShader->setMat4("model", model);
+
+        glBindVertexArray(lightVAO);
+        glDrawArrays(GL_TRIANGLES, 0, lightVertices.size() / 3);
         glBindVertexArray(0);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
