@@ -11,7 +11,7 @@ const int VERSION_MAJOR = 3;
 const int VERSION_MINOR = 3;
 const float FRONT = 0.1f;
 const float BACK = 100.0f;
-const glm::vec4 BACKGROUNDCOLOR = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+const glm::vec4 BACKGROUNDCOLOR = glm::vec4(0.1f, 0.3f, 0.1f, 1.0f);
 const glm::vec3 LIGHTPOS = glm::vec3(1.2f, 1.5f, 2.0f);
 const std::string TITLE = "Sztanga Window";
 
