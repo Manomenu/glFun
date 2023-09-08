@@ -51,6 +51,7 @@ private:
 	float deltaTime;
 	float lastFrame;
 	std::vector<float> vertices, lightVertices;
+	std::vector<glm::vec3> cubePositions;
 	GLuint VAO, VBO, lightVAO, lightVBO;
 	unsigned int texture;
 	unsigned int specularMap;
