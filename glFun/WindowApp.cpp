@@ -257,8 +257,13 @@ void WindowApp::runLoop()
     shader->setVec3("light.ambient", 0.1f, 0.1f, 0.1f);
     shader->setVec3("light.diffuse", 0.6f, 0.6f, 0.6f); // darken diffuse light a bit
     shader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-    // shader->setVec3("light.position", LIGHTPOS);
-    shader->setVec3("light.direction", -LIGHTPOS.x, -LIGHTPOS.y, -LIGHTPOS.z);
+    //shader->setVec3("light.position", LIGHTPOS);
+    // shader->setVec3("light.direction", -LIGHTPOS.x, -LIGHTPOS.y, -LIGHTPOS.z);
+    shader->setFloat("light.constant", 1.0f);
+    shader->setFloat("light.linear", 0.09f);
+    shader->setFloat("light.quadratic", 0.032f);
+    shader->setFloat("light.cutOff", glm::cos(glm::radians(7.5f)));
+    shader->setFloat("light.outerCutOff", glm::cos(glm::radians(12.5f)));
 
     glEnable(GL_DEPTH_TEST);
 
@@ -279,6 +284,9 @@ void WindowApp::runLoop()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shader->use();
+
+        shader->setVec3("light.position", camData->camera->Position);
+        shader->setVec3("light.direction", camData->camera->Front);
         
         shader->setVec3("viewPos", camData->camera->Position);
         shader->setMat4("view", camData->camera->GetViewMatrix());
