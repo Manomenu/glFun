@@ -2,6 +2,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include <cmath>
+#include <format>
 
 #define ERR(source) (perror(source), fprintf(stdout, "%s:%d\n", __FILE__, __LINE__), glfwTerminate(), exit(EXIT_FAILURE))
 
@@ -11,8 +12,8 @@ const int VERSION_MAJOR = 3;
 const int VERSION_MINOR = 3;
 const float FRONT = 0.1f;
 const float BACK = 100.0f;
-const glm::vec4 BACKGROUNDCOLOR = glm::vec4(0.1f, 0.3f, 0.1f, 1.0f);
-const glm::vec3 LIGHTPOS = glm::vec3(1.2f, 1.5f, 2.0f);
+const glm::vec4 BACKGROUNDCOLOR = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+const glm::vec3 DIRLIGHTDIRECTION = glm::vec3(-3.0f, -6.0f, 2.0f);
 const std::string TITLE = "Sztanga Window";
 
 CameraData* WindowApp::camData = new CameraData(WIDTH, HEIGHT);
@@ -167,6 +168,13 @@ WindowApp::WindowApp() :
         glm::vec3(1.5f,  2.0f, -2.5f),
         glm::vec3(1.5f,  0.2f, -1.5f),
         glm::vec3(-1.3f,  1.0f, -1.5f)
+    },
+    pointLights
+    {
+        PointLight(glm::vec3(0.7f,  0.2f,  2.0f), 1.0f, 0.09f, 0.032f, glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.8f, 0.8f, 0.8f), glm::vec3(1.0f, 1.0f, 1.0f)),
+        PointLight(glm::vec3(2.3f, -3.3f, -4.0f), 1.0f, 0.09f, 0.032f, glm::vec3(0.05f, 0.0f, 0.05f), glm::vec3(0.8f, 0.0f, 0.8f), glm::vec3(1.0f, 0.0f, 1.0f)),
+        PointLight(glm::vec3(-4.0f,  2.0f, -12.0f), 1.0f, 0.09f, 0.032f, glm::vec3(0.05f, 0.05f, 0.0f), glm::vec3(0.8f, 0.8f, 0.0f), glm::vec3(1.0f, 1.0f, 0.0f)),
+        PointLight(glm::vec3(0.0f,  0.0f, -3.0f), 1.0f, 0.09f, 0.032f, glm::vec3(0.05f, 0.0f, 0.0f), glm::vec3(0.8f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f)),
     }
 {
     lastFrame = deltaTime = 0.0f;
@@ -251,19 +259,36 @@ void WindowApp::runLoop()
     glm::mat4 model;
 
     shader->use();
+
+    // material
     shader->setInt("material.diffuse", 0);
     shader->setInt("material.specular", 1);
     shader->setFloat("material.shininess", 32.0f);
-    shader->setVec3("light.ambient", 0.1f, 0.1f, 0.1f);
-    shader->setVec3("light.diffuse", 0.6f, 0.6f, 0.6f); // darken diffuse light a bit
-    shader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-    //shader->setVec3("light.position", LIGHTPOS);
-    // shader->setVec3("light.direction", -LIGHTPOS.x, -LIGHTPOS.y, -LIGHTPOS.z);
-    shader->setFloat("light.constant", 1.0f);
-    shader->setFloat("light.linear", 0.09f);
-    shader->setFloat("light.quadratic", 0.032f);
-    shader->setFloat("light.cutOff", glm::cos(glm::radians(7.5f)));
-    shader->setFloat("light.outerCutOff", glm::cos(glm::radians(12.5f)));
+
+    // directional light
+    shader->setVec3("dirLight.direction", DIRLIGHTDIRECTION);
+    shader->setVec3("dirLight.ambient", 0.1f, 0.1f, 0.1f);
+    shader->setVec3("dirLight.diffuse", 0.0f, 0.0f, 0.0f);
+    shader->setVec3("dirLight.specular", 0.0f, 0.0f, 0.0f);
+    
+    // spot light
+    shader->setFloat("spotLight.cutOff", glm::cos(glm::radians(10.5f)));
+    shader->setFloat("spotLight.innerCutOff", glm::cos(glm::radians(8.5f)));
+    shader->setVec3("spotLight.ambient", 0.1f, 0.1f, 0.1f);
+    shader->setVec3("spotLight.diffuse", 0.6f, 0.6f, 0.6f);
+    shader->setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
+
+    // point lights
+    for (int i = 0; i < pointLights.size(); i++)
+    {
+        shader->setVec3(std::format("pointLights[{}].position", i), pointLights[i].position);
+        shader->setVec3(std::format("pointLights[{}].ambient", i), pointLights[i].ambient);
+        shader->setVec3(std::format("pointLights[{}].diffuse", i), pointLights[i].diffuse);
+        shader->setVec3(std::format("pointLights[{}].specular", i), pointLights[i].specular);
+        shader->setFloat(std::format("pointLights[{}].constant", i), pointLights[i].constant);
+        shader->setFloat(std::format("pointLights[{}].linear", i), pointLights[i].linear);
+        shader->setFloat(std::format("pointLights[{}].quadratic", i), pointLights[i].quadratic);
+    }
 
     glEnable(GL_DEPTH_TEST);
 
@@ -278,15 +303,15 @@ void WindowApp::runLoop()
         glClearColor(
             BACKGROUNDCOLOR.x,
             BACKGROUNDCOLOR.y,
-            BACKGROUNDCOLOR.y,
-            BACKGROUNDCOLOR.z
+            BACKGROUNDCOLOR.z,
+            BACKGROUNDCOLOR.w
         );
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shader->use();
 
-        shader->setVec3("light.position", camData->camera->Position);
-        shader->setVec3("light.direction", camData->camera->Front);
+        shader->setVec3("spotLight.position", camData->camera->Position);
+        shader->setVec3("spotLight.direction", camData->camera->Front);
         
         shader->setVec3("viewPos", camData->camera->Position);
         shader->setMat4("view", camData->camera->GetViewMatrix());
@@ -314,19 +339,23 @@ void WindowApp::runLoop()
 
 
         lightShader->use();
-
         lightShader->setMat4("view", camData->camera->GetViewMatrix());
         projection = glm::perspective(glm::radians(camData->camera->Zoom),
             winData->width / (float)winData->height, FRONT, BACK);
         lightShader->setMat4("projection", projection);
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, LIGHTPOS);
-        model = glm::scale(model, glm::vec3(0.2f));
-        lightShader->setMat4("model", model);
 
-        glBindVertexArray(lightVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        glBindVertexArray(0);
+        for (int i = 0; i < pointLights.size(); i++)
+        {    
+            model = glm::mat4(1.0f);
+            model = glm::translate(model, pointLights[i].position);
+            model = glm::scale(model, glm::vec3(0.2f));
+            lightShader->setMat4("model", model);
+            lightShader->setVec3("lightSourceColor", pointLights[i].specular);
+
+            glBindVertexArray(lightVAO);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+            glBindVertexArray(0);
+        }
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------

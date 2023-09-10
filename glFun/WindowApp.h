@@ -41,6 +41,19 @@ struct CameraData
 	}
 };
 
+struct PointLight
+{
+	glm::vec3 position;
+
+	float constant;
+	float linear;
+	float quadratic;
+
+	glm::vec3 ambient;
+	glm::vec3 diffuse;
+	glm::vec3 specular;
+};
+
 class WindowApp
 {
 public:
@@ -52,6 +65,7 @@ private:
 	float lastFrame;
 	std::vector<float> vertices, lightVertices;
 	std::vector<glm::vec3> cubePositions;
+	std::vector<PointLight> pointLights;
 	GLuint VAO, VBO, lightVAO, lightVBO;
 	unsigned int texture;
 	unsigned int specularMap;
